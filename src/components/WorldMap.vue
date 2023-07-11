@@ -1,11 +1,4 @@
 <template>
-  <div class="worldmap">
-    <CountryInfo
-      v-if="selectedCountry !== null"
-      @close="onCountryInfoClose"
-      class="panel-info"
-      :country="selectedCountry"
-    />
     <div
       class="map-wrapper"
       ref="WRAPPER"
@@ -64,19 +57,20 @@
         />
       </div>
     </div>
-  </div>
 </template>
 <script setup>
-import CountryInfo from "./CountryInfo.vue";
+
 import { onMounted, ref, onBeforeMount } from "vue";
 import Button from "primevue/button";
 import { getCountriesAsync } from "../countries.js";
+const countries = ref([]);
 
 const WRAPPER = ref(null);
 const WRAPPER_MAP = ref(null);
 const map = ref(null);
-const selectedCountry = ref(null);
-const countries = ref([]);
+
+const props = defineProps(['selectedCountry']);
+const emits = defineEmits(['country-select']);
 
 const options = {
   scale: 1.4,
@@ -96,7 +90,7 @@ onBeforeMount(async () => {
 function onMouseUp(e, country) {
   options.panning = false;
   if (!options.isMoving && country) {
-    selectedCountry.value = country
+    emits('country-select', country);
   }
 }
 function onMouseDown(e) {
@@ -166,25 +160,9 @@ function onMinus() {
     options.scale /= 1.2;
     transform();
 }
-function onClick(country) {
-  if (country.title) {
-    if (selectedCountry.value) {
-      selectedCountry.value.htmlTarget.classList.remove("selected-country");
-    }
-    selectedCountry.value = country;
-    selectedCountry.value.htmlTarget.classList.add("selected-country");
-  }
-}
-function onCountryInfoClose() {
-  selectedCountry.value = null;
-}
 </script>
 
 <style scoped>
-.worldmap {
-  position: relative;
-  height: 100%;
-}
 .move-panel {
   position: absolute;
   bottom: 0;
@@ -224,13 +202,6 @@ function onCountryInfoClose() {
   fill: #759eff57;
   stroke: #759eff;
   stroke-width: 0.5;
-}
-.panel-info {
-  position: absolute;
-  left: 0;
-  margin: 20px;
-  background-color: #fff;
-  z-index: 100;
 }
 .selected-country {
   fill: #759eff57 !important;

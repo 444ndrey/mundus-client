@@ -2,8 +2,7 @@
   <div class="layout">
     <AppMenu />
     <div class="main">
-      <WorldMap></WorldMap>
-
+      <router-view/>
     </div>
   </div>
 </template>

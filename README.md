@@ -1,7 +1,10 @@
-# Vue 3 + Vite
+# Mundus
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Mundus is an interactive application that represents a world map with brief information about different countries.
 
-## Recommended IDE Setup
+## Installation and Usage
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+1. Clone the repository from GitHub: git clone https://github.com/444ndrey/mundus-client
+2. Navigate to the project directory: cd mundus-client
+3. Install dependencies: npm install
+4. Start the application: npm start

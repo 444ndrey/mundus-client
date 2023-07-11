@@ -1,0 +1,47 @@
+@font-face {
+  font-family: Inter;
+  src: url(./assets/fonts/inter.ttf);
+}
+
+
+:root{
+   --base-font-color-light: #484455;
+   --accent-color: #4f299a;
+}
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Inter;
+  letter-spacing: 2px;
+}
+
+p,h1,h2,h3{
+  color: var(--base-font-color-light);
+}
+
+
+
+*::selection{
+  background-color: var(--primary-color);
+  color: #fff;
+}
+
+html{
+  height: 100vh;
+  width: 100%;
+}
+
+body{
+  height: 100%;
+  width: 100%;
+}
+#app{
+  width: 100%;
+  height: 100%;
+}
+
+.selected-country{
+  color: red;
+}

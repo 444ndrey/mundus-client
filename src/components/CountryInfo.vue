@@ -1,27 +1,65 @@
 <template>
   <div class="country-wrapper">
     <div class="country-header">
-      <h2>{{country.title}}</h2>
-      <Button icon="pi pi-times" @click="onClose" text rounded aria-label="Cancel" />
+      <Button
+        icon="pi pi-times"
+        @click="onClose"
+        text
+        rounded
+        aria-label="Cancel"
+      />
+    </div>
+    <ProgressSpinner class="spinner" v-if="isLodaing" />
+    <div class="country-info" v-else>
+      <div class="country-title">
+        <h2>{{ country.title }}</h2>
+        <img
+        class="country-info-flag"
+        :src="countryData.flag"
+        :alt="countryData.altFlag"
+      />
+      </div>
+      <TabView>
+        <TabPanel header="Brief">
+            <p class="country-tab-content-field"><label>Population: </label>{{formatNumber(countryData.population)}}</p>
+            <p class="country-tab-content-field"><label>Capital: </label>{{countryData.capital}}</p>
+            <p class="country-tab-content-field"><label>Curency: </label>{{countryData.curency.name}}({{countryData.curency.symbol }})</p>
+        </TabPanel>
+        <TabPanel header="Economic"> </TabPanel>
+        <TabPanel header="News"> </TabPanel>
+      </TabView>
     </div>
   </div>
 </template>
 
 <script setup>
-import Button from 'primevue/button';
+import Button from "primevue/button";
+import { getCountryInfo } from "../api.js";
+import { onMounted, ref } from "vue";
+import ProgressSpinner from "primevue/progressspinner";
+import TabView from "primevue/tabview";
+import TabPanel from "primevue/tabpanel";
+import {formatNumber} from '../utils.js'
 
-const emits = defineEmits(['close'])
+const isLodaing = ref(true);
+const emits = defineEmits(["close"]);
 const props = defineProps({
-    country: {
-        title: String,
-        id: String
-    }
+  country: {
+    title: String,
+    id: String,
+  },
 });
 
-function onClose(){
-  emits('close');
-}
+const countryData = ref(null);
 
+onMounted(async () => {
+  countryData.value = await getCountryInfo(props.country.id);
+  isLodaing.value = false;
+});
+
+function onClose() {
+  emits("close");
+}
 </script>
 
 <style scoped>
@@ -30,16 +68,48 @@ function onClose(){
   width: 500px;
   background-color: #fff;
   border-radius: 10px;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
   -webkit-box-shadow: 3px 10px 30px 11px rgba(110, 99, 174, 0.2);
   -moz-box-shadow: 3px 10px 30px 11px rgba(110, 99, 174, 0.2);
   box-shadow: 3px 10px 30px 11px rgba(110, 99, 174, 0.2);
   color: var(--base-font-color-light);
   padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
-.country-header{
+.country-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
+}
+.spinner {
+  margin: auto;
+  stroke: var(--primary-color) !important;
 }
 
+.country-info {
+  margin-top: 20px;
+}
+.country-info-flag {
+  max-width: 100px;
+  max-height: 70px;
+  border: 1px solid var(--base-font-color-light);
+}
+.country-title{
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.country-title > h2{
+  align-self: flex-end;
+}
+.country-tab-content-field{
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+.country-tab-content-field > label{
+  font-weight: 400;
+}
 </style>

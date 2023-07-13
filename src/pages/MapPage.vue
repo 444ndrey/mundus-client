@@ -6,17 +6,21 @@
       class="panel-info"
       :country="selectedCountry"
     />
-    <WorldMap @country-select="onCountrySelect" :selected-country="onCountrySelect" />
+    <WorldMap @country-select="onCountrySelect" :selected-country="selectedCountry" />
   </div>
 </template>
 
 <script setup>
-import {ref} from 'vue';
+import {ref, nextTick} from 'vue';
 import CountryInfo from "../components/CountryInfo.vue";
 import WorldMap from "../components/WorldMap.vue";
+
+
 const selectedCountry = ref(null);
 
-function onCountrySelect(country){
+async function onCountrySelect(country){
+  selectedCountry.value = null;
+    await nextTick(); // needs for waiting for the next DOM update.
     selectedCountry.value = country;
 }
 

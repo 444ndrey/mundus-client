@@ -1,76 +1,82 @@
 <template>
-    <div
-      class="map-wrapper"
-      ref="WRAPPER"
-      @wheel="onWheel"
-      @mousedown="onMouseDown"
-      @mousemove="onMouseMove"
-      @mouseup="onMouseUp"
-      @mouseout="onMosueOut"
-    >
-      <div class="map" ref="WRAPPER_MAP">
-        <svg
-          ref="map"
-          class="map-svg"
-          xmlns:mapsvg="http://mapsvg.com"
-          xmlns:dc="http://purl.org/dc/elements/1.1/"
-          xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-          xmlns:svg="http://www.w3.org/2000/svg"
-          xmlns="http://www.w3.org/2000/svg"
-          mapsvg:geoViewBox="-169.110266 83.600842 190.486279 -58.508473"
-          width="1009.6727"
-          height="665.96301"
-        >
-          <path class="map-country" :class="{'selected-country' : selectedCountry === country}" v-for="country in countries" :d="country.d" @mouseup="e => onMouseUp(e, country)"></path>
-        </svg>
-      </div>
-      <div class="move-panel">
-        <Button
-          icon="pi pi-plus"
-          v-tooltip="'Zoom In'"
-          text
-          raised
-          outlined
-          rounded
-          size="small"
-          @click.stop="onPlus"
-        />
-        <Button
-          icon="pi pi-refresh"
-          v-tooltip="'Reset'"
-          text
-          raised
-          outlined
-          rounded
-          size="small"
-          @click.stop="onReset"
-        />
-        <Button
-          icon="pi pi-minus"
-          v-tooltip="'Zoom out'"
-          text
-          raised
-          outlined
-          rounded
-          size="small"
-          @click.stop="onMinus"
-        />
-      </div>
+  <div
+    class="map-wrapper"
+    ref="WRAPPER"
+    @wheel="onWheel"
+    @mousedown="onMouseDown"
+    @mousemove="onMouseMove"
+    @mouseup.prevent="onMouseUp"
+    @mouseout="onMosueOut"
+  >
+    <div class="map" ref="WRAPPER_MAP">
+      <svg
+        ref="map"
+        class="map-svg"
+        xmlns:mapsvg="http://mapsvg.com"
+        xmlns:dc="http://purl.org/dc/elements/1.1/"
+        xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+        xmlns:svg="http://www.w3.org/2000/svg"
+        xmlns="http://www.w3.org/2000/svg"
+        mapsvg:geoViewBox="-169.110266 83.600842 190.486279 -58.508473"
+        width="1009.6727"
+        height="665.96301"
+      >
+        <path
+          class="map-country"
+          :class="{ 'selected-country': selectedCountry === country }"
+          v-for="country in countries"
+          :d="country.d"
+          @mouseup="(e) => onMouseUp(e, country)"
+        ></path>
+      </svg>
     </div>
+    <div class="move-panel">
+      <Button
+        icon="pi pi-plus"
+        v-tooltip="'Zoom In'"
+        text
+        raised
+        outlined
+        rounded
+        size="small"
+        @click.stop="onPlus"
+      />
+      <Button
+        icon="pi pi-refresh"
+        v-tooltip="'Reset'"
+        text
+        raised
+        outlined
+        rounded
+        size="small"
+        @click.stop="onReset"
+      />
+      <Button
+        icon="pi pi-minus"
+        v-tooltip="'Zoom out'"
+        text
+        raised
+        outlined
+        rounded
+        size="small"
+        @click.stop="onMinus"
+      />
+    </div>
+  </div>
 </template>
 <script setup>
-
 import { onMounted, ref, onBeforeMount } from "vue";
 import Button from "primevue/button";
 import { getCountriesAsync } from "../countries.js";
+
 const countries = ref([]);
 
 const WRAPPER = ref(null);
 const WRAPPER_MAP = ref(null);
 const map = ref(null);
 
-const props = defineProps(['selectedCountry']);
-const emits = defineEmits(['country-select']);
+const props = defineProps(["selectedCountry"]);
+const emits = defineEmits(["country-select"]);
 
 const options = {
   scale: 1.4,
@@ -90,7 +96,7 @@ onBeforeMount(async () => {
 function onMouseUp(e, country) {
   options.panning = false;
   if (!options.isMoving && country) {
-    emits('country-select', country);
+    emits("country-select", country);
   }
 }
 function onMouseDown(e) {
@@ -103,14 +109,14 @@ function onMouseDown(e) {
   }
 }
 
-function onMouseMove(e){
+function onMouseMove(e) {
   e.preventDefault();
-    if (options.panning) {
-      options.pointX = e.clientX - options.startX;
-      options.pointY = e.clientY - options.startY;
-      transform();
-      options.isMoving = true;
-    }
+  if (options.panning) {
+    options.pointX = e.clientX - options.startX;
+    options.pointY = e.clientY - options.startY;
+    transform();
+    options.isMoving = true;
+  }
 }
 
 function onWheel(e) {
@@ -136,29 +142,29 @@ function onWheel(e) {
 function transform() {
   WRAPPER_MAP.value.style.transform = `translate(${options.pointX}px, ${options.pointY}px) scale(${options.scale})`;
 }
-function onMouseOut(){
-  options.panning = false
+function onMouseOut() {
+  options.panning = false;
 }
 
 function onReset() {
   options.pointX = 0;
-    options.pointY = 0;
-    options.scale = 1.4;
-    transform();
+  options.pointY = 0;
+  options.scale = 1.4;
+  transform();
 }
 function onPlus() {
-  if(options.scale >= 14){
-        return;
-    }
-    options.scale *= 1.2;   
-    transform();
+  if (options.scale >= 14) {
+    return;
+  }
+  options.scale *= 1.2;
+  transform();
 }
 function onMinus() {
-  if(options.scale <= 1.4){
-        return
-    }
-    options.scale /= 1.2;
-    transform();
+  if (options.scale <= 1.4) {
+    return;
+  }
+  options.scale /= 1.2;
+  transform();
 }
 </script>
 
@@ -183,7 +189,7 @@ function onMinus() {
   flex: 1;
   margin: 0;
   overflow: hidden;
-  cursor: grab;
+  /* cursor: move; */
   position: relative;
 }
 .map {

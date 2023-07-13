@@ -11,6 +11,7 @@
 import AppMenu from "./components/AppMenu.vue";
 import WorldMap from "./components/WorldMap.vue";
 
+
 </script>
 
 <style scoped>

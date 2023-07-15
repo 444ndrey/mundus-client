@@ -11,6 +11,8 @@ async function getCountryInfo(countryID){
         const country = (await response.json())[0];
         console.log(country);
         return {
+            id: countryID,
+            title: country.name.official,
             capital: country.capital[0],
             flag: country.flags.png,
             altFlag: country.flags.alt,

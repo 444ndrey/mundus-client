@@ -12,18 +12,27 @@
     <ProgressSpinner class="spinner" v-if="isLodaing" />
     <div class="country-info" v-else>
       <div class="country-title">
-        <h2>{{ country.title }}</h2>
+        <h2>{{ countryData.title }}</h2>
         <img
-        class="country-info-flag"
-        :src="countryData.flag"
-        :alt="countryData.altFlag"
-      />
+          class="country-info-flag"
+          :src="countryData.flag"
+          :alt="countryData.altFlag"
+        />
       </div>
       <TabView>
         <TabPanel header="Brief">
-            <p class="country-tab-content-field"><label>Population: </label>{{formatNumber(countryData.population)}}</p>
-            <p class="country-tab-content-field"><label>Capital: </label>{{countryData.capital}}</p>
-            <p class="country-tab-content-field"><label>Curency: </label>{{countryData.curency.name}}({{countryData.curency.symbol }})</p>
+          <p class="country-tab-content-field">
+            <label>Population: </label
+            >{{ formatNumber(countryData.population) }}
+          </p>
+          <p class="country-tab-content-field">
+            <label>Capital: </label>{{ countryData.capital }}
+          </p>
+          <p class="country-tab-content-field">
+            <label>Curency: </label>{{ countryData.curency.name }}({{
+              countryData.curency.symbol
+            }})
+          </p>
         </TabPanel>
         <TabPanel header="Economic"> </TabPanel>
         <TabPanel header="News"> </TabPanel>
@@ -39,7 +48,8 @@ import { onMounted, ref } from "vue";
 import ProgressSpinner from "primevue/progressspinner";
 import TabView from "primevue/tabview";
 import TabPanel from "primevue/tabpanel";
-import {formatNumber} from '../utils.js'
+import { formatNumber } from "../utils.js";
+import { storeCountry, getCountryFromStorage } from "../cache_storage.js";
 
 const isLodaing = ref(true);
 const emits = defineEmits(["close"]);
@@ -53,7 +63,17 @@ const props = defineProps({
 const countryData = ref(null);
 
 onMounted(async () => {
-  countryData.value = await getCountryInfo(props.country.id);
+  const countryFromStorage = await getCountryFromStorage(props.country.id);
+  if (countryFromStorage === null) {
+    countryData.value = await getCountryInfo(props.country.id);
+    if (countryData.value) {
+      await storeCountry(countryData.value);
+    }
+  }else{
+    countryData.value = countryFromStorage;
+    console.log('FROM CACHE');
+  }
+  console.log(countryData.value)
   isLodaing.value = false;
 });
 
@@ -97,19 +117,19 @@ function onClose() {
   max-height: 70px;
   border: 1px solid var(--base-font-color-light);
 }
-.country-title{
+.country-title {
   display: flex;
   justify-content: space-between;
   margin-bottom: 10px;
 }
-.country-title > h2{
+.country-title > h2 {
   align-self: flex-end;
 }
-.country-tab-content-field{
+.country-tab-content-field {
   margin-bottom: 20px;
   font-weight: 500;
 }
-.country-tab-content-field > label{
+.country-tab-content-field > label {
   font-weight: 400;
 }
 </style>

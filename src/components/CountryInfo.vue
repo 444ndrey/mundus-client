@@ -23,19 +23,26 @@
         <TabPanel header="Brief">
           <p class="country-tab-content-field">
             <label>Population: </label
-            >{{ formatNumber(countryData.population) }}
+            >{{ formatNumber(fromatedCountryData.population) }}
           </p>
           <p class="country-tab-content-field">
-            <label>Capital: </label>{{ countryData.capital }}
+            <label>Capital: </label>{{ fromatedCountryData.capital }}
           </p>
           <p class="country-tab-content-field">
-            <label>Curency: </label>{{ countryData.curency.name }}({{
-              countryData.curency.symbol
+            <label>Curency: </label>{{ fromatedCountryData.curency.name }}({{
+              fromatedCountryData.curency.symbol
             }})
           </p>
         </TabPanel>
         <TabPanel header="Economic">
-          <CurrencyExchager :currencyCode="countryData.currencyCode" />
+          <div class="panel-info">
+            <CurrencyExchager :currencyCode="countryData.currencyCode" />
+            <Divider/>
+            <p class="country-tab-content-field"><label>GDP: </label>{{fromatedCountryData.gdp}}</p>
+            <p class="country-tab-content-field"><label>GDP Per Captia: </label>{{fromatedCountryData.gdpPerCaptia}}</p>
+            <p class="country-tab-content-field"><label>Imports: </label>{{fromatedCountryData.imports}}</p>
+            <p class="country-tab-content-field"><label>Exports: </label>{{fromatedCountryData.exports}}</p>
+          </div>
         </TabPanel>
         <TabPanel header="News"> </TabPanel>
       </TabView>
@@ -45,8 +52,9 @@
 
 <script setup>
 import Button from "primevue/button";
+import Divider from 'primevue/divider';
 import { getCountryInfo, getCurrenciesExcangeRate } from "../api.js";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import ProgressSpinner from "primevue/progressspinner";
 import TabView from "primevue/tabview";
 import TabPanel from "primevue/tabpanel";
@@ -64,6 +72,20 @@ const props = defineProps({
 
 const countryData = ref(null);
 
+const fromatedCountryData = computed(() => {
+  let country =  {
+      population: countryData.value.population || 'no data',
+      capital: countryData.value.capital || 'no data',
+      curency: countryData.value.curency || {name: 'no data', symbol: ''},
+      gdp: countryData.value.gdp !== undefined ? `$${formatNumber(countryData.value.gdp)}` : 'no data',
+      imports: countryData.value.imports != undefined ? `$${formatNumber(countryData.value.imports)}` : 'no data',
+      exports: countryData.value.exports != undefined ? `$${formatNumber(countryData.value.exports)}` : 'no data',
+      gdpPerCaptia: countryData.value.gdpPerCaptia !== undefined ? `$${countryData.value.gdpPerCaptia}` : 'no data'
+  }
+  return country;
+});
+
+
 onMounted(async () => {
   countryData.value = await getCountryInfo(props.country.id);
   const data = getCurrenciesExcangeRate();
@@ -77,7 +99,7 @@ function onClose() {
 
 <style scoped>
 .country-wrapper {
-  height: 600px;
+  height: 700px;
   width: 500px;
   background-color: #fff;
   border-radius: 10px;
@@ -121,8 +143,13 @@ function onClose() {
 .country-tab-content-field {
   margin-bottom: 20px;
   font-weight: 500;
+  font-size: 16px;
 }
 .country-tab-content-field > label {
   font-weight: 400;
+}
+.panel-info{
+  display: flex;
+  flex-direction: column;
 }
 </style>

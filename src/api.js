@@ -1,16 +1,19 @@
 const CURRENCY_KEY = import.meta.env.VITE_CURRENCY_API_KEY;
+const NINJAS_KEY = import.meta.env.VITE_NINJA_API_KEY;
 const CURRENCIES_LIST = [];
 import { storeExchangeData, getExchangeDataFromStorage,
      storeCountry, getCountryFromStorage } from "./cache_storage.js";
 
 
 const URL = 'https://restcountries.com/v3.1/';
+const NINJAS_URL = 'https://api.api-ninjas.com/v1/';
 async function getCountryInfo(countryID){
     try {
         const countryFromStorage = getCountryFromStorage(countryID);
         let country = null;
         if(countryFromStorage === null){
             const response = await fetch(`${URL}/alpha/${countryID}`);
+            const ninjasData = await getCountryFromNinjasApi(countryID);
             const data = (await response.json())[0];
             console.log(data);
             country = {id: countryID,
@@ -20,7 +23,15 @@ async function getCountryInfo(countryID){
                 altFlag: data.flags.alt,
                 population: data.population,
                 curency: Object.values(data.currencies)[0], //symbol and name
-                currencyCode: Object.keys(data.currencies)[0]}
+                currencyCode: Object.keys(data.currencies)[0],
+            }
+            if(ninjasData){
+                country.gdp = ninjasData.gdp * 1000000;
+                country.gdpGrowth = ninjasData.gdp_growth;
+                country.imports = ninjasData.imports * 1000000;
+                country.exports = ninjasData.exports * 1000000;
+                country.gdpPerCaptia = ninjasData.gdp_per_capita;
+            }
             storeCountry(country);
         }
         else{
@@ -32,6 +43,28 @@ async function getCountryInfo(countryID){
         
     } catch (error) {
         console.error(error);
+        return null;
+    }
+}
+
+async function getCountryFromNinjasApi(countryID){
+    const options = {
+        headers: {"X-Api-Key": NINJAS_KEY},
+        contentType: 'application/json',
+        method: 'GET'
+    };
+    try {
+        const response = await fetch(`${NINJAS_URL}/country?name=${countryID}`,options);
+        if(response.ok){
+            const result = await response.json();
+            return result[0]
+        }
+        else{
+            throw new Error(response.statusText)
+            return;
+        }
+    } catch (error) {
+        console.log(error)
         return null;
     }
 }

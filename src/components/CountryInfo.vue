@@ -34,7 +34,9 @@
             }})
           </p>
         </TabPanel>
-        <TabPanel header="Economic"> </TabPanel>
+        <TabPanel header="Economic">
+          <CurrencyExchager :currencyCode="countryData.currencyCode" />
+        </TabPanel>
         <TabPanel header="News"> </TabPanel>
       </TabView>
     </div>
@@ -43,13 +45,13 @@
 
 <script setup>
 import Button from "primevue/button";
-import { getCountryInfo } from "../api.js";
+import { getCountryInfo, getCurrenciesExcangeRate } from "../api.js";
 import { onMounted, ref } from "vue";
 import ProgressSpinner from "primevue/progressspinner";
 import TabView from "primevue/tabview";
 import TabPanel from "primevue/tabpanel";
 import { formatNumber } from "../utils.js";
-import { storeCountry, getCountryFromStorage } from "../cache_storage.js";
+import CurrencyExchager from "./CurrencyExchager.vue";
 
 const isLodaing = ref(true);
 const emits = defineEmits(["close"]);
@@ -63,17 +65,8 @@ const props = defineProps({
 const countryData = ref(null);
 
 onMounted(async () => {
-  const countryFromStorage = await getCountryFromStorage(props.country.id);
-  if (countryFromStorage === null) {
-    countryData.value = await getCountryInfo(props.country.id);
-    if (countryData.value) {
-      await storeCountry(countryData.value);
-    }
-  }else{
-    countryData.value = countryFromStorage;
-    console.log('FROM CACHE');
-  }
-  console.log(countryData.value)
+  countryData.value = await getCountryInfo(props.country.id);
+  const data = getCurrenciesExcangeRate();
   isLodaing.value = false;
 });
 

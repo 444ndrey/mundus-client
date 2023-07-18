@@ -65,9 +65,9 @@
   </div>
 </template>
 <script setup>
-import { onMounted, ref, onBeforeMount } from "vue";
+import {ref, onBeforeMount } from "vue";
 import Button from "primevue/button";
-import { getCountriesAsync } from "../countries.js";
+import { getCountries } from "../countries.js";
 
 const countries = ref([]);
 
@@ -90,7 +90,7 @@ const options = {
 };
 
 onBeforeMount(async () => {
-  countries.value = await getCountriesAsync();
+  countries.value = await getCountries();
 });
 
 function onMouseUp(e, country) {
@@ -142,10 +142,6 @@ function onWheel(e) {
 function transform() {
   WRAPPER_MAP.value.style.transform = `translate(${options.pointX}px, ${options.pointY}px) scale(${options.scale})`;
 }
-function onMouseOut() {
-  options.panning = false;
-}
-
 function onReset() {
   options.pointX = 0;
   options.pointY = 0;

@@ -16,8 +16,7 @@
         <img
           class="country-info-flag"
           :src="countryData.flag"
-          :alt="countryData.altFlag"
-        />
+          :alt="countryData.altFlag"/>
       </div>
       <TabView>
         <TabPanel header="Brief">
@@ -37,11 +36,20 @@
         <TabPanel header="Economic">
           <div class="panel-info">
             <CurrencyExchager :currencyCode="countryData.currencyCode" />
-            <Divider/>
-            <p class="country-tab-content-field"><label>GDP: </label>{{fromatedCountryData.gdp}}</p>
-            <p class="country-tab-content-field"><label>GDP Per Captia: </label>{{fromatedCountryData.gdpPerCaptia}}</p>
-            <p class="country-tab-content-field"><label>Imports: </label>{{fromatedCountryData.imports}}</p>
-            <p class="country-tab-content-field"><label>Exports: </label>{{fromatedCountryData.exports}}</p>
+            <Divider />
+            <p class="country-tab-content-field">
+              <label>GDP: </label>{{ fromatedCountryData.gdp }}
+            </p>
+            <p class="country-tab-content-field">
+              <label>GDP Per Captia: </label
+              >{{ fromatedCountryData.gdpPerCaptia }}
+            </p>
+            <p class="country-tab-content-field">
+              <label>Imports: </label>{{ fromatedCountryData.imports }}
+            </p>
+            <p class="country-tab-content-field">
+              <label>Exports: </label>{{ fromatedCountryData.exports }}
+            </p>
           </div>
         </TabPanel>
         <TabPanel header="News"> </TabPanel>
@@ -52,8 +60,8 @@
 
 <script setup>
 import Button from "primevue/button";
-import Divider from 'primevue/divider';
-import { getCountryInfo, getCurrenciesExcangeRate } from "../api.js";
+import Divider from "primevue/divider";
+import { getCountryInfo } from "../api.js";
 import { onMounted, ref, computed } from "vue";
 import ProgressSpinner from "primevue/progressspinner";
 import TabView from "primevue/tabview";
@@ -73,22 +81,32 @@ const props = defineProps({
 const countryData = ref(null);
 
 const fromatedCountryData = computed(() => {
-  let country =  {
-      population: countryData.value.population || 'no data',
-      capital: countryData.value.capital || 'no data',
-      curency: countryData.value.curency || {name: 'no data', symbol: ''},
-      gdp: countryData.value.gdp !== undefined ? `$${formatNumber(countryData.value.gdp)}` : 'no data',
-      imports: countryData.value.imports != undefined ? `$${formatNumber(countryData.value.imports)}` : 'no data',
-      exports: countryData.value.exports != undefined ? `$${formatNumber(countryData.value.exports)}` : 'no data',
-      gdpPerCaptia: countryData.value.gdpPerCaptia !== undefined ? `$${countryData.value.gdpPerCaptia}` : 'no data'
-  }
+  let country = {
+    population: countryData.value.population || "no data",
+    capital: countryData.value.capital || "no data",
+    curency: countryData.value.curency || { name: "no data", symbol: "" },
+    gdp:
+      countryData.value.gdp !== undefined
+        ? `$${formatNumber(countryData.value.gdp)}`
+        : "no data",
+    imports:
+      countryData.value.imports != undefined
+        ? `$${formatNumber(countryData.value.imports)}`
+        : "no data",
+    exports:
+      countryData.value.exports != undefined
+        ? `$${formatNumber(countryData.value.exports)}`
+        : "no data",
+    gdpPerCaptia:
+      countryData.value.gdpPerCaptia !== undefined
+        ? `$${countryData.value.gdpPerCaptia}`
+        : "no data",
+  };
   return country;
 });
 
-
 onMounted(async () => {
   countryData.value = await getCountryInfo(props.country.id);
-  const data = getCurrenciesExcangeRate();
   isLodaing.value = false;
 });
 
@@ -136,6 +154,7 @@ function onClose() {
   display: flex;
   justify-content: space-between;
   margin-bottom: 10px;
+  align-items: center;
 }
 .country-title > h2 {
   align-self: flex-end;
@@ -148,7 +167,7 @@ function onClose() {
 .country-tab-content-field > label {
   font-weight: 400;
 }
-.panel-info{
+.panel-info {
   display: flex;
   flex-direction: column;
 }

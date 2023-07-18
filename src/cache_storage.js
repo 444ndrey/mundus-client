@@ -66,25 +66,6 @@ function getCurrenciesListFromStorage(){
     const data = JSON.parse(dataString);
     return Object.keys(data.conversion_rates);  
 }
-// function storeAllCountriesToStorage(countries){
-//     const string = JSON.stringify(countries);
-//     localStorage.setItem('all-countries', string);
-// }
-// async function getAllCountriesFromStorageAsync(){
-//     try {
-//         const data = await new Promise((resolve, reject) => {
-//             const string = localStorage.getItem('all-countries');
-//             if(string === null){
-//                 resolve(null);
-//             }
-//             resolve(JSON.parse(string));
-//         });
-//         return data;
-//     } catch (error) {
-//         console.error
-//         return null;
-//     }
-// }
 
 export {storeCountry,
     getCountryFromStorage,

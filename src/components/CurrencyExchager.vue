@@ -1,6 +1,8 @@
 <template>
-  <h3 v-if="isNoDate">No currency data</h3>
-  <div class="exchanger-wrapper" v-if="!isLodaing && !isNoDate">
+  <ProgressSpinner v-if="isLodaing" />
+  <div>
+  <h3 v-if="isNoData">No currency data</h3>
+  <div class="exchanger-wrapper" v-if="!isLodaing && !isNoData">
     <div class="exchanger-top">
       <Dropdown
         class="exchanger-dropdown w-full md:w-14rem"
@@ -42,14 +44,16 @@
       </h2>
     </div>
   </div>
+</div>
 </template>
 
 <script setup>
 import Dropdown from "primevue/dropdown";
 import { getAllCurrencies, getCurrenciesExcangeRate } from "../api.js";
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onMounted, ref } from "vue";
 import Button from "primevue/button";
 import InputNumber from "primevue/inputnumber";
+import ProgressSpinner from 'primevue/progressspinner';
 
 const options = ref([]);
 const selectedFromCurrency = ref(null);
@@ -58,8 +62,7 @@ const props = defineProps(["currencyCode"]);
 const fromCurrencyValue = ref(1);
 const isLodaing = ref(true);
 const currencyRate = ref(1);
-let isExchangeInverse = false;
-let isNoDate = ref(false);
+let isNoData = ref(false);
 const convertedValue = computed(() => {
   if(!fromCurrencyValue.value){
     fromCurrencyValue.value = 1;
@@ -69,30 +72,27 @@ const convertedValue = computed(() => {
 });
 
 onMounted(async () => {
-  currencyRate.value = await getCurrenciesExcangeRate(
-    "USD",
-    props.currencyCode
-  );
-  console.log(currencyRate.value);
   options.value = await getAllCurrencies();
   selectedToCurrency.value = options.value.find(
     (c) => c.code == props.currencyCode
   );
-  selectedFromCurrency.value = options.value.find((c) => c.code === "USD");
-  if (!selectedFromCurrency.value) {
-    isNoDate.value = true;
+  if(!selectedToCurrency.value){
+    isNoData.value = true;
     isLodaing.value = false;
     return;
-  }
+  } 
+  selectedFromCurrency.value = options.value.find((c) => c.code === "USD");
+
   selectedToCurrency.value = options.value.find(
     (c) => c.code == props.currencyCode
   );
+  currencyRate.value = await getCurrenciesExcangeRate(
+    "USD",
+    props.currencyCode
+  );
   isLodaing.value = false;
 });
-
-
 async function onSwitch() {
-  //switch codes
   let temp = selectedFromCurrency.value;
   selectedFromCurrency.value = selectedToCurrency.value;
   selectedToCurrency.value = temp;
@@ -107,7 +107,6 @@ async function onChangeCurrency(e){
     selectedToCurrency.value.code
   );
 }
-
 </script>
 
 <style scoped>

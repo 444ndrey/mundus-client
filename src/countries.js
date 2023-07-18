@@ -1,5 +1,5 @@
 
-async function getCountriesAsync(){
+async function getCountries(){
  return await fetch('./src/assets/world_map.svg')
     .then(res => res.text())
     .then(svgData => {
@@ -18,5 +18,5 @@ async function getCountriesAsync(){
 }
 
 export {
-    getCountriesAsync
+    getCountries
 }

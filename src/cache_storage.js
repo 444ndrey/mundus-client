@@ -67,8 +67,31 @@ function getCurrenciesListFromStorage(){
     return Object.keys(data.conversion_rates);  
 }
 
+
+
+//TODO: FIND A WAY TO UPDATE THE SCORE WITHOUT HAVING TO REFRESH A PAGE
+function storeGameBestResult(result){
+    const lastBest = getGameBestResult();
+    console.log(lastBest)
+    if(!lastBest){
+        localStorage.setItem('game-best', result);
+        return
+    }
+    if(parseInt(lastBest) < parseInt(result)){
+        localStorage.removeItem('game-best');
+        localStorage.setItem('game-best', result);
+    }
+}
+
+function getGameBestResult(){
+    return localStorage.getItem('game-best');
+}
+
 export {storeCountry,
     getCountryFromStorage,
     storeExchangeData,
     getExchangeDataFromStorage,
-    getCurrenciesListFromStorage}
+    getCurrenciesListFromStorage,
+    storeGameBestResult,
+    getGameBestResult
+}

@@ -1,14 +1,9 @@
 <template>
-  <Dialog
-    class="dialog"
-    v-model:visible="isDialog"
-    modal
-    header="Game Over"
-    :style="{ width: '50vw' }"
-  >
-    <p>Your score: {{ gameScore }}</p>
-    <template #footer><Button class="dialog-btn" text rounded @click="() => isDialog=false" >OK</Button></template>
-  </Dialog>
+  <GameDialogResult v-model:visable="isDialog"
+   @close="isDialog=false"
+   :game-score="gameScore"
+   :countries="gameFoundCountries"
+    />
   <div class="worldmap">
     <GameMessage
       class="game-message"
@@ -47,7 +42,9 @@ import WorldMap from "../components/WorldMap.vue";
 import Button from "primevue/button";
 import { getCountries } from "../countries.js";
 import GameMessage from "../components/GameMessage.vue";
-import Dialog from "primevue/dialog";
+import GameDialogResult from '../components/GameDilaogResult.vue';
+import {storeGameBestResult} from '../cache_storage.js'
+
 
 const selectedCountry = ref(null);
 const isCountryInfoShown = ref(false);
@@ -59,6 +56,7 @@ const gameFoundCountries = ref(new Set());
 const gameState = ref("find");
 const isDialog = ref(false);
 let gameScore = 0;
+
 
 async function onCountrySelect(country) {
   if (isGameMode.value) {
@@ -78,7 +76,6 @@ function onCountryInfoClose() {
 async function onStartTheGame() {
   if (isGameMode.value) {
     isGameMode.value = false;
-    gameFoundCountries.value = new Set();
   } else {
     gameScore = 0;
     isGameMode.value = true;
@@ -98,8 +95,6 @@ function setRandomCountry() {
   const randomIndex = Math.floor(Math.random() * gameCountriesList.length);
   countryToFind.value = gameCountriesList[randomIndex];
   gameCountriesList.splice(randomIndex, 1);
-  console.log(gameCountriesList.length);
-  console.log(`FIND: ${countryToFind.value.title} ${countryToFind.value.id}`);
 }
 function gameCountrySelect(country) {
   if (gameFoundCountries.value.has(country.id) || gameState.value !== "find") {
@@ -116,11 +111,12 @@ function gameCountrySelect(country) {
     return;
   }
   gameState.value = "fail";
+  storeGameBestResult(gameScore);
   setTimeout(() => {
     gameState.value = "find";
     isGameMode.value = false;
-    gameFoundCountries.value = new Set();
     isDialog.value = true;
+    gameFoundCountries.value = new Set();
   }, 1000);
 }
 </script>

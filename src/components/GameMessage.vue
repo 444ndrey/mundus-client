@@ -1,13 +1,18 @@
 <template>
-  <div class="message-wrapper">
+  <div
+    class="message-wrapper"
+    :class="{ 'message-wrapper_succes': props.state === 'succes', 
+              'message-wrapper_fail': props.state === 'fail'
+  }"
+  >
     <h2>Find Country</h2>
-    <h3 class="message-content">{{content}}</h3>
+    <h3 class="message-content">{{ content }}</h3>
   </div>
 </template>
 
 <script setup>
 //states = find, succes, fail
-import { ref, computed } from "vue";
+import { computed } from "vue";
 
 const props = defineProps({
   countryName: String,
@@ -20,45 +25,59 @@ const props = defineProps({
 const content = computed(() => {
   switch (props.state) {
     case "find": {
-        return `Find ${props.countryName}`
+      return `Find ${props.countryName}`;
     }
     case "succes": {
-        return `Correct!`
+      return `Correct!`;
     }
     case "fail": {
-        return `Failed!`
+      return `Failed!`;
     }
   }
 });
 </script>
 
 <style scoped>
+
+/* :root{
+  --message-succes-color: #9bd439;
+  --message-fail-color: #ae372e;
+} */
 .message-wrapper {
-  width: 700px;
+  min-width: 400px;
+  max-width: 700px;
   height: 100px;
-  background-color: #fff;
+  background-color: #ffffff91;
   z-index: 100;
   border-radius: 5px;
   -webkit-box-shadow: 3px 10px 30px 11px rgba(110, 99, 174, 0.2);
   -moz-box-shadow: 3px 10px 30px 11px rgba(110, 99, 174, 0.2);
   box-shadow: 3px 10px 30px 11px rgba(110, 99, 174, 0.2);
   padding: 10px;
+  border: 2px solid transparent;
 }
-.message-wrapper > h2{
-    margin-bottom: 10px;
-
+.message-wrapper > h2 {
+  margin-bottom: 10px;
 }
 .message-content {
   width: 100;
-  font-weight: 300;
+  font-weight: 400;
+  font-size: 18px;
 }
-.message-content_find{
-    color: var(--base-font-color-light);
+.message-wrapper > .message-content {
+  color: var(--base-font-color-light);
 }
-.message-content_succes{
-    color: #abd268;
+
+.message-wrapper_succes {
+  border-color: var(--message-succes-color);
 }
-.message-content_fail{
-    color: #da6860;
+.message-wrapper_fail {
+  border-color: var(--message-fail-color);
+}
+.message-wrapper_succes > .message-content {
+  color: var(--message-succes-color);
+}
+.message-wrapper_fail > .message-content {
+  color: var(--message-fail-color);
 }
 </style>

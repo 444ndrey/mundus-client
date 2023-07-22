@@ -1,5 +1,7 @@
 <template>
+  <h2 v-if="isLoading">Loading...</h2>
   <div
+    v-if="!isLoading"
     class="map-wrapper"
     ref="WRAPPER"
     @wheel="onWheel"
@@ -23,8 +25,11 @@
       >
         <path
           class="map-country"
-          :class="{ 'selected-country': selectedCountry === country }"
           v-for="country in countries"
+          :class="{
+            'selected-country': selectedCountry === country,
+            'highlighted-country': props.highlightedCountries.has(country.id),
+          }"
           :d="country.d"
           @mouseup="(e) => onMouseUp(e, country)"
         ></path>
@@ -65,17 +70,28 @@
   </div>
 </template>
 <script setup>
-import {ref, onBeforeMount } from "vue";
+import { ref, onBeforeMount } from "vue";
 import Button from "primevue/button";
 import { getCountries } from "../countries.js";
-
+const isLoading = ref(true);
 const countries = ref([]);
-
 const WRAPPER = ref(null);
 const WRAPPER_MAP = ref(null);
 const map = ref(null);
+onBeforeMount(async () => {
+  countries.value = await getCountries();
+  isLoading.value = false;
+});
 
-const props = defineProps(["selectedCountry"]);
+const props = defineProps({
+  selectedCountry: Object,
+  highlightedCountries: {
+    type: Set,
+    default: new Set()
+  },
+  isGameMode: Boolean
+});
+
 const emits = defineEmits(["country-select"]);
 
 const options = {
@@ -88,11 +104,6 @@ const options = {
   isMoving: false,
   limit: 5,
 };
-
-onBeforeMount(async () => {
-  countries.value = await getCountries();
-});
-
 function onMouseUp(e, country) {
   options.panning = false;
   if (!options.isMoving && country) {
@@ -127,7 +138,7 @@ function onWheel(e) {
   options.pointX = e.clientX - xs * options.scale;
   options.pointY = e.clientY - ys * options.scale;
   if (delta > 0) {
-    if (options.scale >= 14) {
+    if (options.scale >= 18) {
       return;
     }
     options.scale *= 1.2;
@@ -161,6 +172,9 @@ function onMinus() {
   }
   options.scale /= 1.2;
   transform();
+}
+function onMosueOut(){
+  options.panning = false;
 }
 </script>
 
@@ -208,5 +222,9 @@ function onMinus() {
 .selected-country {
   fill: #759eff57 !important;
   stroke: #759eff !important;
+}
+
+.highlighted-country {
+  fill: #75ffcc57 !important;
 }
 </style>

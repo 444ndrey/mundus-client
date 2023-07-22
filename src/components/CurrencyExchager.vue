@@ -1,7 +1,7 @@
 <template>
   <ProgressSpinner v-if="isLodaing" />
   <div>
-  <h3 v-if="isNoData">No currency data</h3>
+  <h3 v-if="isNoData">No exchange data</h3>
   <div class="exchanger-wrapper" v-if="!isLodaing && !isNoData">
     <div class="exchanger-top">
       <Dropdown

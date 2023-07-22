@@ -10,7 +10,8 @@
       />
     </div>
     <ProgressSpinner class="spinner" v-if="isLodaing" />
-    <div class="country-info" v-else>
+    <Message v-else v-for="error in errors" severity="error" :closable="false">{{error.message}}</Message>
+    <div class="country-info" v-if="!isLodaing && errors.length == 0">
       <div class="country-title">
         <h2>{{ countryData.title }}</h2>
         <img
@@ -62,12 +63,13 @@
 import Button from "primevue/button";
 import Divider from "primevue/divider";
 import { getCountryInfo } from "../api.js";
-import { onMounted, ref, computed } from "vue";
+import { onMounted, ref, computed, nextTick } from "vue";
 import ProgressSpinner from "primevue/progressspinner";
 import TabView from "primevue/tabview";
 import TabPanel from "primevue/tabpanel";
 import { formatNumber } from "../utils.js";
 import CurrencyExchager from "./CurrencyExchager.vue";
+import Message from 'primevue/message';
 
 const isLodaing = ref(true);
 const emits = defineEmits(["close"]);
@@ -79,6 +81,7 @@ const props = defineProps({
 });
 
 const countryData = ref(null);
+const errors = ref([]);
 
 const fromatedCountryData = computed(() => {
   let country = {
@@ -86,19 +89,19 @@ const fromatedCountryData = computed(() => {
     capital: countryData.value.capital || "no data",
     curency: countryData.value.curency || { name: "no data", symbol: "" },
     gdp:
-      countryData.value.gdp !== undefined
+      countryData.value.gdp != undefined
         ? `$${formatNumber(countryData.value.gdp)}`
         : "no data",
     imports:
-      countryData.value.imports != undefined
+      countryData.value.imports != undefined && countryData.value.imports != null
         ? `$${formatNumber(countryData.value.imports)}`
         : "no data",
     exports:
-      countryData.value.exports != undefined
+       countryData.value.exports != undefined && countryData.value.exports != null
         ? `$${formatNumber(countryData.value.exports)}`
         : "no data",
     gdpPerCaptia:
-      countryData.value.gdpPerCaptia !== undefined
+      countryData.value.gdpPerCaptia != undefined
         ? `$${countryData.value.gdpPerCaptia}`
         : "no data",
   };
@@ -106,7 +109,15 @@ const fromatedCountryData = computed(() => {
 });
 
 onMounted(async () => {
-  countryData.value = await getCountryInfo(props.country.id);
+  const data = await getCountryInfo(props.country.id);
+  if(!data){
+    await setTimeout(() => {
+      errors.value.push({message: 'Cannot get data from the server'});
+      isLodaing.value = false;
+    }, 5000);
+    return;
+  }
+  countryData.value = data;
   isLodaing.value = false;
 });
 

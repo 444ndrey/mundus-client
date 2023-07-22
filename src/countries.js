@@ -10,7 +10,7 @@ async function getCountries(){
             return {
                 id: path.getAttribute('id'),
                 title: path.getAttribute('title'),
-                d: path.getAttribute('d')
+                d: path.getAttribute('d'),
             }
         });
         return countries;

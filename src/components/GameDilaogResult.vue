@@ -8,7 +8,7 @@
     :style="{ width: '30vw' }"
     >
     <p class="dialog-font">Your score: {{ props.gameScore }}</p>
-    <p class="dialog-font">Best: {{ bestResult }}</p>
+    <!-- <p class="dialog-font">Best: {{ bestResult }}</p> -->
     <template #footer>
       <Button class="dialog-btn" text rounded @click="() => emits('close')">OK</Button>
     </template>

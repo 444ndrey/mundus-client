@@ -31,6 +31,7 @@
       @country-select="onCountrySelect"
       :selected-country="selectedCountry"
       :highlighted-countries="gameFoundCountries"
+      :is-country-name-tool-tip-shown="!isGameMode"
     />
   </div>
 </template>
@@ -76,6 +77,7 @@ function onCountryInfoClose() {
 async function onStartTheGame() {
   if (isGameMode.value) {
     isGameMode.value = false;
+    gameFoundCountries.value = new Set();
   } else {
     gameScore = 0;
     isGameMode.value = true;

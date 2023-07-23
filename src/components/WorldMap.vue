@@ -10,6 +10,12 @@
     @mouseup.prevent="onMouseUp"
     @mouseout="onMosueOut"
   >
+    <h2
+      class="tooltip"
+      v-show="toolTipContent && props.isCountryNameToolTipShown"
+    >
+      {{ toolTipContent }}
+    </h2>
     <div class="map" ref="WRAPPER_MAP">
       <svg
         ref="map"
@@ -32,6 +38,8 @@
           }"
           :d="country.d"
           @mouseup="(e) => onMouseUp(e, country)"
+          @mouseenter="onHover(country)"
+          @mouseleave="() => toolTipContent = null"
         ></path>
       </svg>
     </div>
@@ -78,6 +86,7 @@ const countries = ref([]);
 const WRAPPER = ref(null);
 const WRAPPER_MAP = ref(null);
 const map = ref(null);
+const toolTipContent = ref(null);
 onBeforeMount(async () => {
   countries.value = await getCountries();
   isLoading.value = false;
@@ -87,12 +96,20 @@ const props = defineProps({
   selectedCountry: Object,
   highlightedCountries: {
     type: Set,
-    default: new Set()
+    default: new Set(),
   },
-  isGameMode: Boolean
+  isCountryNameToolTipShown: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 const emits = defineEmits(["country-select"]);
+
+
+function onHover(country){
+    toolTipContent.value = country.title
+}
 
 const options = {
   scale: 1.4,
@@ -133,10 +150,10 @@ function onMouseMove(e) {
 function onWheel(e) {
   e.preventDefault();
   const delta = e.wheelDelta ? e.wheelDelta : -e.deltaY;
-  const xs = (e.clientX - options.pointX) / options.scale;
-  const ys = (e.clientY - options.pointY) / options.scale;
-  options.pointX = e.clientX - xs * options.scale;
-  options.pointY = e.clientY - ys * options.scale;
+  // const xs = (e.clientX - options.pointX) / options.scale;
+  // const ys = (e.clientY - options.pointY) / options.scale;
+  // options.pointX = e.clientX - xs * options.scale;
+  // options.pointY = e.clientY - ys * options.scale;
   if (delta > 0) {
     if (options.scale >= 18) {
       return;
@@ -173,8 +190,8 @@ function onMinus() {
   options.scale /= 1.2;
   transform();
 }
-function onMosueOut(){
-  options.panning = false;
+function onMosueOut() {
+  //options.panning = false;
 }
 </script>
 
@@ -226,5 +243,16 @@ function onMosueOut(){
 
 .highlighted-country {
   fill: #75ffcc57 !important;
+}
+.tooltip{
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 15px;
+  z-index: 100;
+  text-align: center;
+  transition: .3s ease-in;
+  color: #8a8a8a;
+  font-weight: 300;
 }
 </style>

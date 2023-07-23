@@ -41,7 +41,7 @@ import { ref, nextTick } from "vue";
 import CountryInfo from "../components/CountryInfo.vue";
 import WorldMap from "../components/WorldMap.vue";
 import Button from "primevue/button";
-import { getCountries } from "../countries.js";
+import { getFiltredCountriesForGame } from "../countries.js";
 import GameMessage from "../components/GameMessage.vue";
 import GameDialogResult from '../components/GameDilaogResult.vue';
 import {storeGameBestResult} from '../cache_storage.js'
@@ -84,7 +84,7 @@ async function onStartTheGame() {
     isGameMode.value = true;
     isCountryInfoShown.value = false;
     selectedCountry.value = null;
-    gameCountriesList = (await getCountries()).map((c) => {
+    gameCountriesList = (await getFiltredCountriesForGame()).map((c) => {
       return {
         id: c.id,
         title: c.title,

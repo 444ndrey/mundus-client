@@ -192,7 +192,7 @@ function onClose() {
   display: flex;
   flex-direction: column;
 }
-.p-tabview .p-tabview-panels{
+:host ::ng-deep .p-tabview .p-tabview-panels{
   background-color: red;
 }
 

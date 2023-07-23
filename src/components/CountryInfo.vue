@@ -10,32 +10,41 @@
       />
     </div>
     <ProgressSpinner class="spinner" v-if="isLodaing" />
-    <Message v-else v-for="error in errors" severity="error" :closable="false">{{error.message}}</Message>
+    <Message
+      v-else
+      v-for="error in errors"
+      severity="error"
+      :closable="false"
+      >{{ error.message }}</Message
+    >
     <div class="country-info" v-if="!isLodaing && errors.length == 0">
       <div class="country-title">
         <h2>{{ countryData.title }}</h2>
         <img
           class="country-info-flag"
           :src="countryData.flag"
-          :alt="countryData.altFlag"/>
+          :alt="countryData.altFlag"
+        />
       </div>
-      <TabView>
+      <TabView >
         <TabPanel header="Brief">
-          <p class="country-tab-content-field">
-            <label>Population: </label
-            >{{ formatNumber(fromatedCountryData.population) }}
-          </p>
-          <p class="country-tab-content-field">
-            <label>Capital: </label>{{ fromatedCountryData.capital }}
-          </p>
-          <p class="country-tab-content-field">
-            <label>Curency: </label>{{ fromatedCountryData.curency.name }}({{
-              fromatedCountryData.curency.symbol
-            }})
-          </p>
+          <div class="country-tab">
+            <p class="country-tab-content-field">
+              <label>Population: </label
+              >{{ formatNumber(fromatedCountryData.population) }}
+            </p>
+            <p class="country-tab-content-field">
+              <label>Capital: </label>{{ fromatedCountryData.capital }}
+            </p>
+            <p class="country-tab-content-field">
+              <label>Curency: </label>{{ fromatedCountryData.curency.name }}({{
+                fromatedCountryData.curency.symbol
+              }})
+            </p>
+          </div>
         </TabPanel>
         <TabPanel header="Economic">
-          <div class="panel-info">
+          <div class=" country-tab panel-info">
             <CurrencyExchager :currencyCode="countryData.currencyCode" />
             <Divider />
             <p class="country-tab-content-field">
@@ -69,7 +78,7 @@ import TabView from "primevue/tabview";
 import TabPanel from "primevue/tabpanel";
 import { formatNumber } from "../utils.js";
 import CurrencyExchager from "./CurrencyExchager.vue";
-import Message from 'primevue/message';
+import Message from "primevue/message";
 
 const isLodaing = ref(true);
 const emits = defineEmits(["close"]);
@@ -93,11 +102,13 @@ const fromatedCountryData = computed(() => {
         ? `$${formatNumber(countryData.value.gdp)}`
         : "no data",
     imports:
-      countryData.value.imports != undefined && countryData.value.imports != null
+      countryData.value.imports != undefined &&
+      countryData.value.imports != null
         ? `$${formatNumber(countryData.value.imports)}`
         : "no data",
     exports:
-       countryData.value.exports != undefined && countryData.value.exports != null
+      countryData.value.exports != undefined &&
+      countryData.value.exports != null
         ? `$${formatNumber(countryData.value.exports)}`
         : "no data",
     gdpPerCaptia:
@@ -110,9 +121,9 @@ const fromatedCountryData = computed(() => {
 
 onMounted(async () => {
   const data = await getCountryInfo(props.country.id);
-  if(!data){
+  if (!data) {
     await setTimeout(() => {
-      errors.value.push({message: 'Cannot get data from the server'});
+      errors.value.push({ message: "Cannot get data from the server" });
       isLodaing.value = false;
     }, 5000);
     return;
@@ -130,14 +141,14 @@ function onClose() {
 .country-wrapper {
   height: 700px;
   width: 500px;
-  background-color: #fff;
+  background-color: var(--surface-50);
   border-radius: 10px;
   border-top-left-radius: 3px;
   border-bottom-left-radius: 3px;
   -webkit-box-shadow: 3px 10px 30px 11px rgba(110, 99, 174, 0.2);
   -moz-box-shadow: 3px 10px 30px 11px rgba(110, 99, 174, 0.2);
   box-shadow: 3px 10px 30px 11px rgba(110, 99, 174, 0.2);
-  color: var(--base-font-color-light);
+  color: var(--color-text);
   padding: 10px;
   display: flex;
   flex-direction: column;
@@ -152,14 +163,13 @@ function onClose() {
   margin: auto;
   stroke: var(--primary-color) !important;
 }
-
 .country-info {
   margin-top: 20px;
 }
 .country-info-flag {
   max-width: 100px;
   max-height: 70px;
-  border: 1px solid var(--base-font-color-light);
+  border: 1px solid var(--surface-300);
 }
 .country-title {
   display: flex;
@@ -182,4 +192,8 @@ function onClose() {
   display: flex;
   flex-direction: column;
 }
+.p-tabview .p-tabview-panels{
+  background-color: red;
+}
+
 </style>

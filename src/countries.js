@@ -17,6 +17,15 @@ async function getCountries(){
     });
 }
 
+
+async function getFiltredCountriesForGame(){
+    const countries = await getCountries();
+    const result = countries.filter(c => c.d.length > 500);
+    console.log(result);
+    return result;
+}
+
 export {
-    getCountries
+    getCountries,
+    getFiltredCountriesForGame
 }

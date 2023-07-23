@@ -47,7 +47,8 @@ const content = computed(() => {
   min-width: 400px;
   max-width: 700px;
   height: 100px;
-  background-color: #ffffff91;
+  background-color: var(--bg-color);
+  filter: opacity(0.7);
   z-index: 100;
   border-radius: 5px;
   -webkit-box-shadow: 3px 10px 30px 11px rgba(110, 99, 174, 0.2);
@@ -65,7 +66,7 @@ const content = computed(() => {
   font-size: 18px;
 }
 .message-wrapper > .message-content {
-  color: var(--base-font-color-light);
+  color: var(--color-text);
 }
 
 .message-wrapper_succes {

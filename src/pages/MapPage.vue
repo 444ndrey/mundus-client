@@ -72,6 +72,7 @@ async function onCountrySelect(country) {
 
 function onCountryInfoClose() {
   isCountryInfoShown.value = false;
+  selectedCountry.value = null;
 }
 
 async function onStartTheGame() {
@@ -128,7 +129,6 @@ function gameCountrySelect(country) {
   position: absolute;
   left: 0;
   margin: 20px;
-  background-color: #fff;
   z-index: 100;
 }
 .worldmap {

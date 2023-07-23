@@ -224,9 +224,9 @@ function onMosueOut() {
   transform: scale(1.4);
 }
 .map-country {
-  fill: #e5e5e5;
-  stroke: #b2b2b2;
-  stroke-width: 0.3;
+  fill: var(--surface-200);
+  stroke: var(--surface-500);
+  stroke-width: 0.2;
   transition: 0.3s ease-in-out;
   cursor: pointer;
   position: relative;
@@ -252,7 +252,8 @@ function onMosueOut() {
   z-index: 100;
   text-align: center;
   transition: .3s ease-in;
-  color: #8a8a8a;
+  color: var(--color-text);
   font-weight: 300;
+  filter: opacity(0.5);
 }
 </style>

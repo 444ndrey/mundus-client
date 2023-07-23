@@ -87,11 +87,24 @@ function getGameBestResult(){
     return localStorage.getItem('game-best');
 }
 
+
+/**
+ * @param {String} theme 'dark' or 'light'
+ */
+function storeTheme(theme){
+    localStorage.setItem('color-theme', theme);
+}
+function getTheme(){
+    return localStorage.getItem('color-theme');
+}
+
 export {storeCountry,
     getCountryFromStorage,
     storeExchangeData,
     getExchangeDataFromStorage,
     getCurrenciesListFromStorage,
     storeGameBestResult,
-    getGameBestResult
+    getGameBestResult,
+    storeTheme,
+    getTheme
 }

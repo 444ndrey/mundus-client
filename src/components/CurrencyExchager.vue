@@ -1,50 +1,51 @@
 <template>
   <ProgressSpinner v-if="isLodaing" />
   <div>
-  <h3 v-if="isNoData">No exchange data</h3>
-  <div class="exchanger-wrapper" v-if="!isLodaing && !isNoData">
-    <div class="exchanger-top">
-      <Dropdown
-        class="exchanger-dropdown w-full md:w-14rem"
-        v-model="selectedFromCurrency"
-        optionLabel="name"
-        filter
-        :options="options"
-        placeholder="Select currency"
-        @change="onChangeCurrency"
-      ></Dropdown>
-      <Button
-        icon="pi pi-arrow-right-arrow-left"
-        @click="onSwitch"
-        text
-        raised
-        rounded
-        aria-label="Filter"
-      ></Button>
-      <Dropdown
-        class="exchanger-dropdown"
-        v-model="selectedToCurrency"
-        optionLabel="name"
-        filter
-        :options="options"
-        placeholder="Select currency"
-        @change="onChangeCurrency"
-      ></Dropdown>
-    </div>
-    <div class="exchanger-bottom">
-      <InputNumber
-        v-model="fromCurrencyValue"
-        :min="0"
-        :max="1000000000"
-        mode="currency"
-        :currency="selectedFromCurrency.code"
-      ></InputNumber>
-      <h2 class="exchanger-result">
-        {{ selectedToCurrency.symbol }} {{ convertedValue }}
-      </h2>
+    <h3 v-if="isNoData">No exchange data</h3>
+    <div class="exchanger-wrapper" v-if="!isLodaing && !isNoData">
+      <div class="exchanger-top">
+        <Dropdown
+          class="exchanger-dropdown w-full md:w-14rem"
+          v-model="selectedFromCurrency"
+          optionLabel="name"
+          filter
+          :options="options"
+          placeholder="Select currency"
+          @change="onChangeCurrency"
+        ></Dropdown>
+        <Button
+          icon="pi pi-arrow-right-arrow-left"
+          @click="onSwitch"
+          text
+          raised
+          rounded
+          aria-label="Filter"
+        ></Button>
+        <Dropdown
+          class="exchanger-dropdown"
+          v-model="selectedToCurrency"
+          optionLabel="name"
+          filter
+          :options="options"
+          placeholder="Select currency"
+          @change="onChangeCurrency"
+        ></Dropdown>
+      </div>
+      <div class="exchanger-bottom">
+        <InputNumber
+        class="exchanger-result-input"
+          v-model="fromCurrencyValue"
+          :min="0"
+          :max="1000000000"
+          mode="currency"
+          :currency="selectedFromCurrency.code"
+        ></InputNumber>
+        <h2 class="exchanger-result">
+          {{ selectedToCurrency.symbol }} {{ convertedValue }}
+        </h2>
+      </div>
     </div>
   </div>
-</div>
 </template>
 
 <script setup>
@@ -53,7 +54,7 @@ import { getAllCurrencies, getCurrenciesExcangeRate } from "../api.js";
 import { computed, onMounted, ref } from "vue";
 import Button from "primevue/button";
 import InputNumber from "primevue/inputnumber";
-import ProgressSpinner from 'primevue/progressspinner';
+import ProgressSpinner from "primevue/progressspinner";
 
 const options = ref([]);
 const selectedFromCurrency = ref(null);
@@ -64,11 +65,15 @@ const isLodaing = ref(true);
 const currencyRate = ref(1);
 let isNoData = ref(false);
 const convertedValue = computed(() => {
-  if(!fromCurrencyValue.value){
+  if (!fromCurrencyValue.value) {
     fromCurrencyValue.value = 1;
   }
-   let value = parseFloat( (currencyRate.value * fromCurrencyValue.value).toFixed(3) );
-   return new Intl.NumberFormat('ru', {minimumFractionDigits: 1}).format(value);
+  let value = parseFloat(
+    (currencyRate.value * fromCurrencyValue.value).toFixed(3)
+  );
+  return new Intl.NumberFormat("ru", { minimumFractionDigits: 1 }).format(
+    value
+  );
 });
 
 onMounted(async () => {
@@ -76,11 +81,11 @@ onMounted(async () => {
   selectedToCurrency.value = options.value.find(
     (c) => c.code == props.currencyCode
   );
-  if(!selectedToCurrency.value){
+  if (!selectedToCurrency.value) {
     isNoData.value = true;
     isLodaing.value = false;
     return;
-  } 
+  }
   selectedFromCurrency.value = options.value.find((c) => c.code === "USD");
 
   selectedToCurrency.value = options.value.find(
@@ -101,7 +106,7 @@ async function onSwitch() {
     selectedToCurrency.value.code
   );
 }
-async function onChangeCurrency(e){
+async function onChangeCurrency(e) {
   currencyRate.value = await getCurrenciesExcangeRate(
     selectedFromCurrency.value.code,
     selectedToCurrency.value.code
@@ -128,4 +133,52 @@ async function onChangeCurrency(e){
   gap: 20px;
   align-items: center;
 }
+
+/**Media queries */
+
+@media (max-width: 1024px) {
+  .exchanger-bottom {
+    gap: 10px;
+  }
+  .exchanger-top {
+    margin-bottom: 10px;
+  }
+  .exchanger-result {
+    font-size: 18px;
+  }
+  .exchanger-dropdown {
+    width: 150px;
+    font-size: 10px;
+  }
+}
+@media (max-width: 680px) {
+  .exchanger-bottom {
+    gap: 10px;
+  }
+  .exchanger-top {
+    margin-bottom: 10px;
+  }
+  .exchanger-result {
+    font-size: 16px;
+  }
+  .exchanger-dropdown {
+    width: 130px;
+  }
+}
+@media (max-width: 450px) {
+  .exchanger-bottom {
+    gap: 10px;
+  }
+  .exchanger-top {
+    margin-bottom: 10px;
+  }
+  .exchanger-result {
+    font-size: 14px;
+  }
+  .exchanger-dropdown {
+    width: 100px;
+  }
+}
+
+
 </style>

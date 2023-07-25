@@ -16,12 +16,15 @@ async function getCountryInfo(countryID){
             const response = await fetch(`${RESTCOUNTRIES_URL}/alpha/${countryID}`);
             const ninjasData = await getCountryFromNinjasApi(countryID);
             const data = (await response.json())[0];
+            console.log(data);
             country = {id: countryID,
                 title: data.name.official,
                 capital: data.capital[0],
                 flag: data.flags.png,
                 altFlag: data.flags.alt,
                 population: data.population,
+                startOfTheWeek: data.startOfWeek,
+                languages: Object.values(data.languages),
                 curency: Object.values(data.currencies)[0], //symbol and name
                 currencyCode: Object.keys(data.currencies)[0],
             }

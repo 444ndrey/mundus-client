@@ -1,9 +1,10 @@
 <template>
-  <GameDialogResult v-model:visable="isDialog"
-   @close="isDialog=false"
-   :game-score="gameScore"
-   :countries="gameFoundCountries"
-    />
+  <GameDialogResult
+    v-model:visable="isDialog"
+    @close="isDialog = false"
+    :game-score="gameScore"
+    :countries="gameFoundCountries"
+  />
   <div class="worldmap">
     <GameMessage
       class="game-message"
@@ -43,9 +44,8 @@ import WorldMap from "../components/WorldMap.vue";
 import Button from "primevue/button";
 import { getFiltredCountriesForGame } from "../countries.js";
 import GameMessage from "../components/GameMessage.vue";
-import GameDialogResult from '../components/GameDilaogResult.vue';
-import {storeGameBestResult} from '../cache_storage.js'
-
+import GameDialogResult from "../components/GameDilaogResult.vue";
+import { storeGameBestResult } from "../cache_storage.js";
 
 const selectedCountry = ref(null);
 const isCountryInfoShown = ref(false);
@@ -57,7 +57,6 @@ const gameFoundCountries = ref(new Set());
 const gameState = ref("find");
 const isDialog = ref(false);
 let gameScore = 0;
-
 
 async function onCountrySelect(country) {
   if (isGameMode.value) {
@@ -128,7 +127,6 @@ function gameCountrySelect(country) {
 .panel-info {
   position: absolute;
   left: 0;
-  margin: 20px;
   z-index: 100;
 }
 .worldmap {
@@ -148,5 +146,16 @@ function gameCountrySelect(country) {
   margin-left: 20px;
   z-index: 100;
   margin-top: 10px;
+}
+
+/*Media queries */
+
+@media (max-width: 700px) {
+  .panel-info {
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+  }
 }
 </style>

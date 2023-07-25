@@ -19,14 +19,14 @@
     >
     <div class="country-info" v-if="!isLodaing && errors.length == 0">
       <div class="country-title">
-        <h2>{{ countryData.title }}</h2>
         <img
           class="country-info-flag"
           :src="countryData.flag"
           :alt="countryData.altFlag"
         />
+        <h2>{{ countryData.title }}</h2>
       </div>
-      <TabView >
+      <TabView>
         <TabPanel header="Brief">
           <div class="country-tab">
             <p class="country-tab-content-field">
@@ -41,10 +41,16 @@
                 fromatedCountryData.curency.symbol
               }})
             </p>
+            <p class="country-tab-content-field">
+              <label>Languages: </label>{{ fromatedCountryData.languages }}
+            </p>
+            <p class="country-tab-content-field">
+              <label>Start of The Week: </label>{{ fromatedCountryData.startOfTheWeek }}
+            </p>
           </div>
         </TabPanel>
         <TabPanel header="Economic">
-          <div class=" country-tab panel-info">
+          <div class="country-tab panel-info">
             <CurrencyExchager :currencyCode="countryData.currencyCode" />
             <Divider />
             <p class="country-tab-content-field">
@@ -62,7 +68,9 @@
             </p>
           </div>
         </TabPanel>
-        <TabPanel header="News"> </TabPanel>
+        <TabPanel header="News">
+          <h3 style="width: 100%; text-align: center; margin-top: 20px ;">IN THE DEV</h3>
+        </TabPanel>
       </TabView>
     </div>
   </div>
@@ -97,6 +105,8 @@ const fromatedCountryData = computed(() => {
     population: countryData.value.population || "no data",
     capital: countryData.value.capital || "no data",
     curency: countryData.value.curency || { name: "no data", symbol: "" },
+    startOfTheWeek: countryData.value.startOfTheWeek || "no data",
+    languages: countryData.value.languages.join(', '),
     gdp:
       countryData.value.gdp != undefined
         ? `$${formatNumber(countryData.value.gdp)}`
@@ -153,6 +163,7 @@ function onClose() {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  margin: 20px;
 }
 .country-header {
   display: flex;
@@ -161,10 +172,10 @@ function onClose() {
 }
 .spinner {
   margin: auto;
-  stroke: var(--primary-color) !important;
 }
 .country-info {
   margin-top: 20px;
+  overflow-y: auto;
 }
 .country-info-flag {
   max-width: 100px;
@@ -173,12 +184,14 @@ function onClose() {
 }
 .country-title {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   margin-bottom: 10px;
+  gap: 15px;
   align-items: center;
 }
 .country-title > h2 {
   align-self: flex-end;
+  color: var(--surface-800);
 }
 .country-tab-content-field {
   margin-bottom: 20px;
@@ -191,9 +204,69 @@ function onClose() {
 .panel-info {
   display: flex;
   flex-direction: column;
-}
-:host ::ng-deep .p-tabview .p-tabview-panels{
-  background-color: red;
+  overflow-y: auto;
 }
 
+/* MEDIA QUERIES */
+
+@media (max-width: 1000px) {
+  .country-wrapper {
+    width: 450px;
+    height: 650px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .country-wrapper {
+    width: 400px;
+    height: 600px;
+    margin-left: 10px;
+  }
+  .country-tab-content-field {
+    margin-bottom: 20px;
+    font-weight: 500;
+    font-size: 14px;
+  }
+  .country-info-flag{
+    max-width: 80px;
+    max-height: 50px;
+  }
+}
+@media (max-width: 680px) {
+  .country-wrapper {
+    border-radius: 10px;
+    margin-top: 40px;
+  }
+}
+@media (max-width: 450px) {
+  .country-wrapper {
+    width: 350px;
+    min-height: 500px;
+  }
+  .country-tab-content-field {
+    margin-bottom: 10px;
+    font-size: 12px;
+  }
+  .p-tabview{
+    font-size: 12px;
+  }
+  .country-title > h2{
+    font-size: 16px
+  }
+}
+@media (max-width: 360px) {
+  .country-wrapper {
+    width: 300px;
+  }
+  .country-tab-content-field {
+    font-weight: 500;
+    font-size: 12px;
+  }
+  .p-tabview{
+    font-size: 12px;
+  }
+  .country-title > h2{
+    font-size: 16px
+  }
+}
 </style>

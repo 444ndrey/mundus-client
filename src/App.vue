@@ -2,15 +2,13 @@
   <div class="layout">
     <AppMenu />
     <div class="main">
-      <router-view/>
+      <router-view />
     </div>
   </div>
 </template>
 
 <script setup>
 import AppMenu from "./components/AppMenu.vue";
-
-
 </script>
 
 <style scoped>
@@ -23,5 +21,11 @@ import AppMenu from "./components/AppMenu.vue";
 .main {
   position: relative;
   height: 100%;
+}
+
+@media (max-width: 680px) {
+  .main {
+    overflow-y: hidden;
+  }
 }
 </style>

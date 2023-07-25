@@ -39,7 +39,7 @@
           :d="country.d"
           @mouseup="(e) => onMouseUp(e, country)"
           @mouseenter="onHover(country)"
-          @mouseleave="() => toolTipContent = null"
+          @mouseleave="() => (toolTipContent = null)"
         ></path>
       </svg>
     </div>
@@ -106,9 +106,8 @@ const props = defineProps({
 
 const emits = defineEmits(["country-select"]);
 
-
-function onHover(country){
-    toolTipContent.value = country.title
+function onHover(country) {
+  toolTipContent.value = country.title;
 }
 
 const options = {
@@ -154,13 +153,14 @@ function onWheel(e) {
   // const ys = (e.clientY - options.pointY) / options.scale;
   // options.pointX = e.clientX - xs * options.scale;
   // options.pointY = e.clientY - ys * options.scale;
+  const minScale = window.innerWidth < 680 ? 0.9 : 1.4;
   if (delta > 0) {
     if (options.scale >= 18) {
       return;
     }
     options.scale *= 1.2;
   } else {
-    if (options.scale <= 1.4) {
+    if (options.scale <= minScale) {
       return;
     }
     options.scale /= 1.2;
@@ -242,18 +242,28 @@ function onMosueOut() {
 }
 
 .highlighted-country {
-  fill: #75ffcc57 !important;
+  fill: #a8f5d99d !important;
+  stroke: #9cf5d4 !important;
+  stroke-width: 0.5;
 }
-.tooltip{
+.tooltip {
   position: absolute;
   top: 0;
   right: 0;
   margin: 15px;
   z-index: 100;
   text-align: center;
-  transition: .3s ease-in;
+  transition: 0.3s ease-in;
   color: var(--color-text);
   font-weight: 300;
   filter: opacity(0.5);
+}
+
+@media (max-width: 680px) {
+  .tooltip {
+    font-size: 14px;
+    left: 0;
+    margin: 10px auto;
+  }
 }
 </style>

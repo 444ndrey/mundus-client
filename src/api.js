@@ -104,7 +104,7 @@ async function getCurrenciesExcangeRate(codeFrom, codeTo){
 
 async function getAllCurrencies(){
     try {
-        const data = await (await fetch('../src/assets/currencies.json')).json();
+        const data = await (await fetch('/currencies.json')).json();
         return Object.values(data);
     } catch (error) {
         console.error(error);

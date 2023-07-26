@@ -1,6 +1,6 @@
 
 async function getCountries(){
- return await fetch('./src/assets/world_map.svg')
+ return await fetch('/world_map.svg')
     .then(res => res.text())
     .then(svgData => {
         const parser = new DOMParser();

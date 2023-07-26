@@ -14,7 +14,6 @@ const PrimeVue = usePrimeVue();
 const theme = getTheme();
 
 watch(isDark, () => {
-  console.log("ds");
   if (!isDark.value) {
     PrimeVue.changeTheme(
       "md-dark-indigo",

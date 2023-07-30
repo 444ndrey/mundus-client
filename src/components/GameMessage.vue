@@ -39,10 +39,7 @@ const content = computed(() => {
 </script>
 
 <style scoped>
-/* :root{
-  --message-succes-color: #9bd439;
-  --message-fail-color: #ae372e;
-} */
+
 .message-wrapper {
   min-width: 400px;
   max-width: 700px;

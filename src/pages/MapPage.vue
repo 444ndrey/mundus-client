@@ -6,18 +6,22 @@
     :countries="gameFoundCountries"
   />
   <div class="worldmap">
+    <Transition name="info-slide-fade">
     <GameMessage
       class="game-message"
       :state="gameState"
       :country-name="countryToFind.title || ''"
       v-if="isGameMode"
     />
-    <CountryInfo
-      v-if="isCountryInfoShown"
-      @close="onCountryInfoClose"
-      class="panel-info"
-      :country="selectedCountry"
-    />
+  </Transition>
+    <Transition name="info-slide-fade">
+      <CountryInfo
+        v-if="isCountryInfoShown"
+        @close="onCountryInfoClose"
+        class="panel-info"
+        :country="selectedCountry"
+      />
+    </Transition>
     <Button
       class="play-btn"
       :icon="isGameMode ? 'pi pi-times' : 'pi pi-play'"
@@ -147,7 +151,19 @@ function gameCountrySelect(country) {
   z-index: 100;
   margin-top: 10px;
 }
+.info-slide-fade-enter-active {
+  transition: all 0.3s ease-out;
+}
 
+.info-slide-fade-leave-active {
+  transition: all 0.2s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.info-slide-fade-enter-from,
+.info-slide-fade-leave-to {
+  transform: translateX(-20px);
+  opacity: 0;
+}
 /*Media queries */
 
 @media (max-width: 700px) {

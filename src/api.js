@@ -29,10 +29,10 @@ async function getCountryInfo(countryID){
                 currencyCode: Object.keys(data.currencies)[0],
             }
             if(ninjasData){
-                country.gdp = ninjasData.gdp * 1000000;
+                country.gdp = ninjasData.gdp * 1_000_000;
                 country.gdpGrowth = ninjasData.gdp_growth;
-                country.imports = ninjasData.imports * 1000000;
-                country.exports = ninjasData.exports * 1000000;
+                country.imports = ninjasData.imports * 1_000_000;
+                country.exports = ninjasData.exports * 1_000_000;
                 country.gdpPerCaptia = ninjasData.gdp_per_capita;
             }
             storeCountry(country);
@@ -112,7 +112,29 @@ async function getAllCurrencies(){
     }
 }
 
-export {getCountryInfo, getCurrenciesExcangeRate, getAllCurrencies}
+async function getAllCountries(){
+    try {
+        const response = await fetch(`${RESTCOUNTRIES_URL}/all`);
+        const data = await response.json();
+        const countreis = data.map(c => {
+            return {
+                id: c.cca2,
+                flag: c.flags.png,
+                title: c.name.common,
+                population: c.population
+            }
+        });
+        return countreis.sort((a,b) => b.population - a.population);
+        
+    } catch (error) {
+        console.error(error);
+        return [];
+    }
+}
+
+export {getCountryInfo,
+     getCurrenciesExcangeRate,
+     getAllCurrencies, getAllCountries}
 
 
 

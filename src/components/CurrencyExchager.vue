@@ -69,9 +69,9 @@ const convertedValue = computed(() => {
     fromCurrencyValue.value = 1;
   }
   let value = parseFloat(
-    (currencyRate.value * fromCurrencyValue.value).toFixed(3)
+    (currencyRate.value * fromCurrencyValue.value).toFixed(2)
   );
-  return new Intl.NumberFormat("ru", { minimumFractionDigits: 1 }).format(
+  return new Intl.NumberFormat("en", { minimumFractionDigits: 2 }).format(
     value
   );
 });

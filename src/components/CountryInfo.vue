@@ -92,13 +92,26 @@ const isLodaing = ref(true);
 const emits = defineEmits(["close"]);
 const props = defineProps({
   country: {
-    title: String,
     id: String,
   },
 });
 
 const countryData = ref(null);
 const errors = ref([]);
+onMounted(async () => {
+  const data = await getCountryInfo(props.country.id);
+  if (!data) {
+    await setTimeout(() => {
+      errors.value.push({ message: "Cannot get data from the server" });
+      isLodaing.value = false;
+    }, 5000);
+    return;
+  }
+  countryData.value = data;
+  isLodaing.value = false;
+});
+
+
 
 const fromatedCountryData = computed(() => {
   let country = {
@@ -128,20 +141,6 @@ const fromatedCountryData = computed(() => {
   };
   return country;
 });
-
-onMounted(async () => {
-  const data = await getCountryInfo(props.country.id);
-  if (!data) {
-    await setTimeout(() => {
-      errors.value.push({ message: "Cannot get data from the server" });
-      isLodaing.value = false;
-    }, 5000);
-    return;
-  }
-  countryData.value = data;
-  isLodaing.value = false;
-});
-
 function onClose() {
   emits("close");
 }

@@ -33,7 +33,7 @@
           class="map-country"
           v-for="country in countries"
           :class="{
-            'selected-country': selectedCountry === country,
+            'selected-country': selectedCountry && selectedCountry.id === country.id,
             'highlighted-country': props.highlightedCountries.has(country.id),
           }"
           :d="country.d"
@@ -239,6 +239,7 @@ function onMosueOut() {
 .selected-country {
   fill: #759eff57 !important;
   stroke: #759eff !important;
+  stroke-width: 0.5;
 }
 
 .highlighted-country {

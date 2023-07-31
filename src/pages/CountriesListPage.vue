@@ -9,7 +9,7 @@
   ></Button>
   <div class="list-wrapper">
     <ProgressSpinner class="spinner" v-if="isLoading" />
-    <span class="p-input-icon-left list-search">
+    <span class="p-input-icon-left list-search" v-if="!isLoading">
       <i class="pi pi-search" />
       <InputText v-model="searchValue" placeholder="Search" />
     </span>

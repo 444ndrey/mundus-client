@@ -1,5 +1,11 @@
 
+import { getAllCountries } from "./api.js";
+let countriesInfo = null;
+
 async function getCountries(){
+    if(!countriesInfo){
+        countriesInfo = await getAllCountries(); 
+    }
  return await fetch('/world_map.svg')
     .then(res => res.text())
     .then(svgData => {
@@ -11,6 +17,11 @@ async function getCountries(){
                 id: path.getAttribute('id'),
                 title: path.getAttribute('title'),
                 d: path.getAttribute('d'),
+                data: {
+                    population: countriesInfo.find(c => c.id === path.getAttribute('id'))?.population || 0,
+                    gini: countriesInfo.find(c => c.id === path.getAttribute('id'))?.gini || 0,
+                    area: countriesInfo.find(c => c.id === path.getAttribute('id'))?.area || 0,
+                }
             }
         });
         return countries;

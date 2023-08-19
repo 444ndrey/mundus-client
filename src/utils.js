@@ -23,23 +23,24 @@ function formatNumber(num){
 
 function getColorOfCountry(value, heatOption){
     let color = '';
-        if(value <= heats[heatOption].VERY_COLD){
-            color = '#d0ff00';
+
+        if(value < heats[heatOption].VERY_COLD){
+            color = '#3498db';
         }
-        if( value > heats[heatOption].VERY_COLD && value <= heats[heatOption].COLD){
-            color = '#ffea00';
+        if( value >= heats[heatOption].VERY_COLD){
+            color = '#16a085';
         }
-        if(value > heats[heatOption].COLD && value <= heats[heatOption].WARM){
-            color = '#ffbf00';
+        if(value >= heats[heatOption].COLD){
+            color = '#f1c40f';
         }
-        if(value > heats[heatOption].WARM && value <= heats[heatOption].HOT){
-            color= '#ff8c00';
+        if(value >= heats[heatOption].WARM){
+            color= '#f39c12';
         }
-        if(value > heats[heatOption].HOT && value <= heats[heatOption].VERY_HOT){
-            color= '#ff4d00';
+        if(value >= heats[heatOption].HOT){
+            color= '#d35400';
         }
-        if(value > heats[heatOption].VERY_HOT){
-            color = '#FF0400';
+        if(value >= heats[heatOption].VERY_HOT){
+            color = '#c0392b';
         }
         if(!value || value == 0){
             color = '';

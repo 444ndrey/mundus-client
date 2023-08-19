@@ -5,13 +5,23 @@
       :style="{ 'background-color': getColorOfCountry(item, selectedType) }"
       v-for="(item, key, index) in heats[props.selectedType]"
     >
-      <p>{{ index >= 4 ? "<" : ">" }} {{ formatNumber(item) }}</p>
+      <p>{{ ">" }} {{ formatNumber(item) }}</p>
+    </div>
+    <div
+      class="scale-option"
+      :style="{
+        'background-color': getColorOfCountry(
+          heats[props.selectedType].VERY_COLD - 1,
+          selectedType
+        ),
+      }"
+    >
+      <p>{{ "<" }} {{ formatNumber(heats[props.selectedType].VERY_COLD) }}</p>
     </div>
   </div>
 </template>
 
 <script setup>
-import { defineProps } from "vue";
 import heats from "../heats";
 import { formatNumber, getColorOfCountry } from "../utils";
 

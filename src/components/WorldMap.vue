@@ -83,15 +83,13 @@
 import { ref, onBeforeMount, computed } from "vue";
 import Button from "primevue/button";
 import { getCountries } from "../countries.js";
-import {getColorOfCountry} from '../utils.js';
+import { getColorOfCountry } from "../utils.js";
 const isLoading = ref(true);
 const countries = ref([]);
 const WRAPPER = ref(null);
 const WRAPPER_MAP = ref(null);
 const map = ref(null);
 const toolTipContent = ref(null);
-
-
 
 onBeforeMount(async () => {
   countries.value = await getCountries();
@@ -120,12 +118,6 @@ const props = defineProps({
 
 const emits = defineEmits(["country-select"]);
 
-// const heatColors = [
-//   { 1_000_000_000: "#FF040093" },
-//   { 100_000_000: "#FF450D93" },
-//   { 10_000_000: "#FF942993" },
-//   { 1_000_000: "#FFE03093" },
-// ];
 const colorizedMap = computed(() => {
   if (!countries.value) {
     return [];
@@ -133,7 +125,10 @@ const colorizedMap = computed(() => {
   if (props.isHeatShown) {
     let colorized = [...countries.value].map((country) => {
       //console.log(`${country.title} - ${country.data.area}`);
-      country.color = getColorOfCountry(country.data[props.heatOption], props.heatOption)
+      country.color = getColorOfCountry(
+        country.data[props.heatOption],
+        props.heatOption
+      );
       return country;
     });
     return colorized;

@@ -2,9 +2,9 @@ export default {
     population: {
         VERY_HOT: 1_000_000_000,
         HOT: 100_000_000,
-        WARM: 10_000_000,
-        COLD: 1_000_000,
-        VERY_COLD: 500_000
+        WARM: 50_000_000,
+        COLD: 25_000_000,
+        VERY_COLD: 1_000_000
     },
     gini: {
         VERY_HOT: 60,

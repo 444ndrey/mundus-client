@@ -64,7 +64,7 @@ async function getCountryFromNinjasApi(countryID){
             throw new Error(response.statusText)
         }
     } catch (error) {
-        console.log(error)
+        console.error(error)
         return null;
     }
 }

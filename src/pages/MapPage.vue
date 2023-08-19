@@ -41,6 +41,10 @@
       />
     </div>
     <div class="heat-menu">
+      <HeatScale
+        v-if="selectedHeatOption"
+        :selectedType="selectedHeatOption?.value"
+      />
       <SelectButton
         v-if="!isGameMode"
         class="selectheat"
@@ -82,6 +86,7 @@ import GameDialogResult from "../components/GameDilaogResult.vue";
 import { storeGameBestResult } from "../cache_storage.js";
 import { useRouter, useRoute } from "vue-router";
 import SelectButton from "primevue/selectbutton";
+import HeatScale from "../components/HeatScale.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -95,9 +100,9 @@ const gameState = ref("find");
 const isDialog = ref(false);
 let gameScore = 0;
 const heatOptions = ref([
-  { icon: "pi pi-users", value: "population"},
-  { icon: "pi pi-chart-bar", value: "gini"},
-  { icon: "pi pi-arrows-alt", value: "area"}
+  { icon: "pi pi-users", value: "population" },
+  { icon: "pi pi-chart-bar", value: "gini" },
+  { icon: "pi pi-arrows-alt", value: "area" },
 ]);
 const selectedHeatOption = ref(null);
 
@@ -213,6 +218,9 @@ function gameCountrySelect(country) {
   margin: 15px auto;
   text-align: center;
   z-index: 9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .game-message {
   position: absolute;

@@ -31,9 +31,11 @@
       >
         <path
           class="map-country"
-          v-for="country in countries"
+          v-for="country in colorizedMap"
+          :style="props.isHeatShown === true ? `fill: ${country.color}` : ''"
           :class="{
-            'selected-country': selectedCountry && selectedCountry.id === country.id,
+            'selected-country':
+              selectedCountry && selectedCountry.id === country.id,
             'highlighted-country': props.highlightedCountries.has(country.id),
           }"
           :d="country.d"
@@ -78,15 +80,17 @@
   </div>
 </template>
 <script setup>
-import { ref, onBeforeMount } from "vue";
+import { ref, onBeforeMount, computed } from "vue";
 import Button from "primevue/button";
 import { getCountries } from "../countries.js";
+import { getColorOfCountry } from "../utils.js";
 const isLoading = ref(true);
 const countries = ref([]);
 const WRAPPER = ref(null);
 const WRAPPER_MAP = ref(null);
 const map = ref(null);
 const toolTipContent = ref(null);
+
 onBeforeMount(async () => {
   countries.value = await getCountries();
   isLoading.value = false;
@@ -102,9 +106,35 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  heatOption: {
+    type: String,
+    default: "population",
+  },
+  isHeatShown: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const emits = defineEmits(["country-select"]);
+
+const colorizedMap = computed(() => {
+  if (!countries.value) {
+    return [];
+  }
+  if (props.isHeatShown) {
+    let colorized = [...countries.value].map((country) => {
+      //console.log(`${country.title} - ${country.data.area}`);
+      country.color = getColorOfCountry(
+        country.data[props.heatOption],
+        props.heatOption
+      );
+      return country;
+    });
+    return colorized;
+  }
+  return countries.value;
+});
 
 function onHover(country) {
   toolTipContent.value = country.title;
@@ -149,10 +179,6 @@ function onMouseMove(e) {
 function onWheel(e) {
   e.preventDefault();
   const delta = e.wheelDelta ? e.wheelDelta : -e.deltaY;
-  // const xs = (e.clientX - options.pointX) / options.scale;
-  // const ys = (e.clientY - options.pointY) / options.scale;
-  // options.pointX = e.clientX - xs * options.scale;
-  // options.pointY = e.clientY - ys * options.scale;
   const minScale = window.innerWidth < 680 ? 0.9 : 1.4;
   if (delta > 0) {
     if (options.scale >= 18) {
@@ -206,6 +232,7 @@ function onMosueOut() {
   flex-direction: column;
   align-items: center;
   gap: 5px;
+  z-index: 10;
 }
 .map-wrapper {
   display: flex;
@@ -259,7 +286,6 @@ function onMosueOut() {
   font-weight: 300;
   filter: opacity(0.5);
 }
-
 @media (max-width: 680px) {
   .tooltip {
     font-size: 14px;

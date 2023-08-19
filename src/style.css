@@ -40,6 +40,7 @@ body {
   height: 100%;
   width: 100%;
   background-color: var(--bg-color);
+  overflow-y: hidden;
 }
 #app {
   width: 100%;

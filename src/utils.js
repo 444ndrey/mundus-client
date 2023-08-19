@@ -1,3 +1,4 @@
+import heats from './heats.js'
 function formatNumber(num){
 
     if(isNaN(num)){
@@ -20,5 +21,30 @@ function formatNumber(num){
     return new Intl.NumberFormat('en-In', { maximumSignificantDigits: 3 }).format(num);
 }
 
+function getColorOfCountry(value, heatOption){
+    let color = '';
 
-export {formatNumber}
+        if(value < heats[heatOption].VERY_COLD){
+            color = '#3498db';
+        }
+        if( value >= heats[heatOption].VERY_COLD){
+            color = '#16a085';
+        }
+        if(value >= heats[heatOption].COLD){
+            color = '#f1c40f';
+        }
+        if(value >= heats[heatOption].WARM){
+            color= '#f39c12';
+        }
+        if(value >= heats[heatOption].HOT){
+            color= '#d35400';
+        }
+        if(value >= heats[heatOption].VERY_HOT){
+            color = '#c0392b';
+        }
+        if(!value || value == 0){
+            color = '';
+        }
+        return color;
+    }
+export {formatNumber,getColorOfCountry}

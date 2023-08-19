@@ -47,6 +47,12 @@
             <p class="country-tab-content-field">
               <label>Start of The Week: </label>{{ fromatedCountryData.startOfTheWeek }}
             </p>
+            <p class="country-tab-content-field">
+              <label>Index Gini: </label>{{ fromatedCountryData.gini }}
+            </p>
+            <p class="country-tab-content-field">
+              <label>Area: </label>{{ fromatedCountryData.area }}
+            </p>
           </div>
         </TabPanel>
         <TabPanel header="Economic">
@@ -119,6 +125,9 @@ const fromatedCountryData = computed(() => {
     capital: countryData.value.capital || "no data",
     curency: countryData.value.curency || { name: "no data", symbol: "" },
     startOfTheWeek: countryData.value.startOfTheWeek || "no data",
+    gini: countryData.value.gini || "no data",
+    area: countryData.value.area !== undefined ? `${formatNumber(countryData.value.area)} km\u00B2` : "no data",
+    
     languages: countryData.value.languages.join(', '),
     gdp:
       countryData.value.gdp != undefined
@@ -139,6 +148,7 @@ const fromatedCountryData = computed(() => {
         ? `$${countryData.value.gdpPerCaptia}`
         : "no data",
   };
+  console.log(country)
   return country;
 });
 function onClose() {

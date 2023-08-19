@@ -16,7 +16,6 @@ async function getCountryInfo(countryID){
             const response = await fetch(`${RESTCOUNTRIES_URL}/alpha/${countryID}`);
             const ninjasData = await getCountryFromNinjasApi(countryID);
             const data = (await response.json())[0];
-           //console.log(data);
             country = {id: countryID,
                 title: data.name.official,
                 capital: data.capital[0],
@@ -27,6 +26,8 @@ async function getCountryInfo(countryID){
                 languages: Object.values(data.languages),
                 curency: Object.values(data.currencies)[0], //symbol and name
                 currencyCode: Object.keys(data.currencies)[0],
+                gini: data.gini !== undefined ? Object.values(data.gini).at(-1) : 0,
+                area: data.area
             }
             if(ninjasData){
                 country.gdp = ninjasData.gdp * 1_000_000;
@@ -63,7 +64,7 @@ async function getCountryFromNinjasApi(countryID){
             throw new Error(response.statusText)
         }
     } catch (error) {
-        console.log(error)
+        console.error(error)
         return null;
     }
 }
@@ -121,7 +122,9 @@ async function getAllCountries(){
                 id: c.cca2,
                 flag: c.flags.png,
                 title: c.name.common,
-                population: c.population
+                gini: c.gini !== undefined ? Object.values(c.gini).at(-1) : 0,
+                population: c.population,
+                area: c.area
             }
         });
         return countreis.sort((a,b) => b.population - a.population);

@@ -4,7 +4,7 @@ import { storeExchangeData, getExchangeDataFromStorage,
      storeCountry, getCountryFromStorage } from "./cache_storage.js";
 
 
-const RESTCOUNTRIES_URL = 'https://restcountries.com/v3.1/';
+const RESTCOUNTRIES_URL = 'https://restcountries.com/v3.1';
 const NINJAS_URL = 'https://api.api-ninjas.com/v1/';
 const EXCHANGE_URL = 'https://v6.exchangerate-api.com/v6';
 
@@ -55,7 +55,7 @@ async function getCountryFromNinjasApi(countryID){
         headers: {"X-Api-Key": NINJAS_KEY},
     };
     try {
-        const response = await fetch(`${NINJAS_URL}/country?name=${countryID}`,options);
+        const response = await fetch(`${NINJAS_URL}country?name=${countryID}`,options);
         if(response.ok){
             const result = await response.json();
             return result[0]

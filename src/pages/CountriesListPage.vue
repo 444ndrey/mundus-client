@@ -70,7 +70,7 @@ const searchValue = ref("");
 onBeforeMount(async () => {
   countries = await getAllCountries();
   isLoading.value = false;
-  formatedCountries.value = countries
+  formatedCountries.value = countries;
 });
 
 function onClickShow(countryId) {
@@ -78,16 +78,16 @@ function onClickShow(countryId) {
 }
 const formatedCountries = ref([]);
 
-
 //Needs timeout because search blocks UI. It allows to make input more responsive.
 watch(searchValue, async () => {
   let timeout;
   clearTimeout(timeout);
   timeout = setTimeout(find, 500);
   function find() {
-    formatedCountries.value = countries.filter((c) =>
-      c.title.toLowerCase().includes(searchValue.value.toLowerCase()) ||
-      c.id.toLowerCase().includes(searchValue.value.toLowerCase())
+    formatedCountries.value = countries.filter(
+      (c) =>
+        c.title.toLowerCase().includes(searchValue.value.toLowerCase()) ||
+        c.id.toLowerCase().includes(searchValue.value.toLowerCase())
     );
   }
 });
@@ -100,7 +100,7 @@ watch(searchValue, async () => {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 800px;
+  height: 80%;
   gap: 10px;
 }
 .list-title {
